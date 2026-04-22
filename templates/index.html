@@ -1,1 +1,311 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRISHU X INTERNAL PRO</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0a0a0a; color: white; }
+        .header { background: linear-gradient(90deg, #8b0000, #ff0000, #8b0000); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 24px; letter-spacing: 2px; }
+        .status-bar { background: #1a1a1a; padding: 10px 30px; display: flex; gap: 30px; border-bottom: 1px solid #ff0000; }
+        .status-item { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #00ff00; }
+        .dot.offline { background: #ff0000; }
+        .container { display: flex; min-height: calc(100vh - 120px); }
+        .sidebar { width: 250px; background: #111; border-right: 1px solid #ff0000; padding: 20px 0; }
+        .nav-item { padding: 15px 25px; color: #999; cursor: pointer; transition: 0.3s; border-left: 3px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,0,0,0.1); color: #ff0000; border-left-color: #ff0000; }
+        .content { flex: 1; padding: 25px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .feature-card { background: #1a1a1a; border: 1px solid #ff0000; border-radius: 10px; padding: 20px; }
+        .feature-card h3 { color: #ff0000; margin-bottom: 15px; }
+        .btn { background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; transition: 0.2s; }
+        .btn:hover { background: #cc0000; }
+        .btn.green { background: #00aa00; }
+        .btn.blue { background: #0066cc; }
+        .btn.danger { background: #8b0000; }
+        .console { background: #000; border: 1px solid #ff0000; border-radius: 5px; padding: 15px; height: 200px; overflow-y: auto; font-family: monospace; margin-top: 20px; }
+        .console-line { color: #00ff00; margin: 3px 0; }
+        .user-info { color: white; }
+        .logout-btn { background: transparent; border: 1px solid #ff0000; color: #ff0000; padding: 8px 20px; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔥 KRISHU X INTERNAL PRO</h1>
+        <div class="user-info">
+            <span>👤 {{ username }}</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="status-bar">
+        <div class="status-item"><span class="dot" id="emuDot"></span> <span id="emuStatus">Checking...</span></div>
+        <div class="status-item"><span class="dot" id="adbDot"></span> <span id="adbStatus">ADB: --</span></div>
+        <div class="status-item">📦 <span id="packageStatus">Package: --</span></div>
+        <div class="status-item">📍 <span id="baseStatus">Base: --</span></div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="nav-item active" data-tab="aimbot">🎯 Aimbot</div>
+            <div class="nav-item" data-tab="sniper">🔭 Sniper</div>
+            <div class="nav-item" data-tab="internal">💎 Internal</div>
+            <div class="nav-item" data-tab="extra">⚡ Extra</div>
+            <div class="nav-item" data-tab="movement">🏃 Movement</div>
+            <div class="nav-item" data-tab="visuals">👁️ Visuals</div>
+            <div class="nav-item" data-tab="settings">⚙️ Settings</div>
+        </div>
+        
+        <div class="content">
+            <!-- AIMBOT TAB -->
+            <div class="tab-content active" id="aimbot">
+                <h2 style="color:#ff0000;margin-bottom:20px;">🎯 Aimbot Options</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Scan</h3>
+                        <button class="btn" onclick="sendCommand('aimbotscan')">Scan Players</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Neck Aim</h3>
+                        <button class="btn green" onclick="sendCommand('aimbotenable')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('aimbotdisable')">Disable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Left Shoulder</h3>
+                        <button class="btn green" onclick="sendCommand('leftShoulderOn')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('leftShoulderOff')">Disable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Right Shoulder</h3>
+                        <button class="btn green" onclick="sendCommand('rightShoulderOn')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('rightShoulderOff')">Disable</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SNIPER TAB -->
+            <div class="tab-content" id="sniper">
+                <h2 style="color:#ff0000;margin-bottom:20px;">🔭 Sniper Options</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Load</h3>
+                        <button class="btn" onclick="sendCommand('loadsniper')">Load Sniper</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Sniper Scope</h3>
+                        <button class="btn green" onclick="sendCommand('sniperscopeenable')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('sniperscopedisable')">Disable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Sniper Switch</h3>
+                        <button class="btn green" onclick="sendCommand('sniperswitchenable')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('sniperswitchdisable')">Disable</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- INTERNAL TAB -->
+            <div class="tab-content" id="internal">
+                <h2 style="color:#ff0000;margin-bottom:20px;">💎 Internal Aimbot</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Load Aimbot</h3>
+                        <button class="btn" onclick="sendCommand('load_aimbot')">Load Aimbot</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Head Aim</h3>
+                        <button class="btn green" onclick="sendCommand('head_aim_on')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('head_aim_off')">Disable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Right Shoulder</h3>
+                        <button class="btn green" onclick="sendCommand('right_shoulder_aim_on')">Enable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Left Shoulder</h3>
+                        <button class="btn green" onclick="sendCommand('left_shoulder_aim_on')">Enable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Shoulder Off</h3>
+                        <button class="btn danger" onclick="sendCommand('shoulder_aim_off')">Disable All</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- EXTRA TAB -->
+            <div class="tab-content" id="extra">
+                <h2 style="color:#ff0000;margin-bottom:20px;">⚡ Extra Options</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Chams</h3>
+                        <button class="btn" onclick="sendCommand('chams3d')">3D Chams</button>
+                        <button class="btn" onclick="sendCommand('chamsmenu')">Chams Menu</button>
+                        <button class="btn" onclick="sendCommand('box3d')">Box 3D</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Recoil</h3>
+                        <button class="btn green" onclick="sendCommand('removerecoil')">No Recoil</button>
+                        <button class="btn danger" onclick="sendCommand('addrecoil')">Restore</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Antenna / Grass</h3>
+                        <button class="btn" onclick="sendCommand('antennahack')">Antenna Hack</button>
+                        <button class="btn" onclick="sendCommand('nograss')">No Grass</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- MOVEMENT TAB -->
+            <div class="tab-content" id="movement">
+                <h2 style="color:#ff0000;margin-bottom:20px;">🏃 Movement Hacks</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Speed Hack</h3>
+                        <button class="btn" onclick="sendCommand('speedhackload')">Load</button>
+                        <button class="btn green" onclick="sendCommand('speedhackenable')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('speedhackdisable')">Disable</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Fly Hack</h3>
+                        <button class="btn" onclick="sendCommand('flyhackload')">Load</button>
+                        <button class="btn green" onclick="sendCommand('flyhackenable')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('flyhackdisable')">Disable</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- VISUALS TAB -->
+            <div class="tab-content" id="visuals">
+                <h2 style="color:#ff0000;margin-bottom:20px;">👁️ Visuals</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Wallhack</h3>
+                        <button class="btn" onclick="sendCommand('wallhackload')">Load</button>
+                        <button class="btn green" onclick="sendCommand('wallhackenable')">Enable</button>
+                        <button class="btn danger" onclick="sendCommand('wallhackdisable')">Disable</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- SETTINGS TAB -->
+            <div class="tab-content" id="settings">
+                <h2 style="color:#ff0000;margin-bottom:20px;">⚙️ Settings & Bypass</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>ADB Connection</h3>
+                        <button class="btn green" onclick="adbConnect()">📱 ADB Connect</button>
+                        <button class="btn danger" onclick="adbDisconnect()">🔌 Disconnect</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Bypass</h3>
+                        <button class="btn green" onclick="sendCommand('bypass_emulator')">🛡️ Emulator Bypass</button>
+                        <button class="btn green" onclick="sendCommand('bypass_anticheat')">🛡️ Anti-Cheat Bypass</button>
+                    </div>
+                    <div class="feature-card">
+                        <h3>System</h3>
+                        <button class="btn danger" onclick="panicMode()">🚨 PANIC MODE</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CONSOLE -->
+            <div class="console" id="console">
+                <div class="console-line">> KRISHU X INTERNAL PRO Ready</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                item.classList.add('active');
+                document.getElementById(item.dataset.tab).classList.add('active');
+            });
+        });
+        
+        // Console log
+        function log(msg) {
+            const consoleEl = document.getElementById('console');
+            consoleEl.innerHTML += `<div class="console-line">> ${msg}</div>`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+        
+        // Send command
+        async function sendCommand(cmd) {
+            log(`Sending: ${cmd}`);
+            try {
+                const res = await fetch('/execute', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({command: cmd})
+                });
+                const data = await res.json();
+                log(data.success ? `✅ ${data.message}` : `❌ ${data.message}`);
+            } catch (e) {
+                log(`❌ Error: ${e.message}`);
+            }
+        }
+        
+        // ADB Functions
+        async function adbConnect() {
+            log('Connecting ADB...');
+            try {
+                const res = await fetch('/adb/connect', {method: 'POST'});
+                const data = await res.json();
+                log(data.success ? `✅ ${data.message}` : `❌ ${data.message}`);
+                checkStatus();
+            } catch (e) {
+                log(`❌ Error: ${e.message}`);
+            }
+        }
+        
+        async function adbDisconnect() {
+            try {
+                const res = await fetch('/adb/disconnect', {method: 'POST'});
+                const data = await res.json();
+                log(data.message);
+                checkStatus();
+            } catch (e) {
+                log(`❌ Error: ${e.message}`);
+            }
+        }
+        
+        // Status check
+        async function checkStatus() {
+            try {
+                const res = await fetch('/status');
+                const data = await res.json();
+                
+                document.getElementById('emuDot').className = data.emulator ? 'dot' : 'dot offline';
+                document.getElementById('emuStatus').textContent = data.emulator ? 'Emulator Online' : 'Emulator Offline';
+                document.getElementById('adbDot').className = data.adb_connected ? 'dot' : 'dot offline';
+                document.getElementById('adbStatus').textContent = data.adb_connected ? 'ADB Connected' : 'ADB Disconnected';
+                document.getElementById('packageStatus').textContent = `Package: ${data.package || 'N/A'}`;
+                document.getElementById('baseStatus').textContent = `Base: ${data.il2cpp_base || 'N/A'}`;
+            } catch (e) {}
+        }
+        
+        function panicMode() {
+            if (confirm('🚨 PANIC MODE - Disable all?')) {
+                ['aimbotdisable', 'leftShoulderOff', 'rightShoulderOff', 'sniperscopedisable', 
+                 'sniperswitchdisable', 'wallhackdisable', 'speedhackdisable', 'flyhackdisable'].forEach(sendCommand);
+                log('🚨 PANIC MODE ACTIVATED!');
+            }
+        }
+        
+        function logout() { window.location.href = '/logout'; }
+        
+        // Start
+        checkStatus();
+        setInterval(checkStatus, 5000);
+    </script>
+</body>
+</html>
